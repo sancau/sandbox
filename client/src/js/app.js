@@ -1,59 +1,34 @@
 
-var appConfig = function ($stateProvider, $urlRouterProvider) {
-  
-  $urlRouterProvider.otherwise('/tasks');
+var run = function($rootScope, $http, $location, $window) {
+  // keep user logged in after page refresh
+  if ($window.localStorage.token) {
+      $http.defaults.headers.common.Authorization = 'Token ' + $window.localStorage.token;
+  }
 
-  $stateProvider
-
-  .state('app', {
-    url: '/',
-    templateUrl: 'views/app.view.html'
-  })
-  
-  .state('app.tasks', {
-    url: 'tasks',
-    controller: 'tasksCtrl as vm',
-    templateUrl: 'views/tasks.view.html'
-  })
-
-  .state('app.types', {
-    url: 'types',
-    controller: 'typesCtrl as vm',
-    templateUrl: 'views/types.view.html'
-  })
-  
-  .state('app.newtask', {
-    url: 'newtask',
-    controller: 'newTaskCtrl as vm',
-    templateUrl: 'views/newtask.view.html',
-    resolve: typesResolve
-  })
-
-  .state('app.newtype', {
-    url: 'newtype',
-    controller: 'newTypeCtrl as vm',
-    templateUrl: 'views/newtype.view.html'
+  // redirect to login page if not logged in and trying to access a restricted page
+  $rootScope.$on('$locationChangeStart', function (event, next, current) {
+      var publicPages = ['/'];
+      var restrictedPage = publicPages.indexOf($location.path()) === -1;
+      if (restrictedPage && !$window.localStorage.token) {
+          $location.path('/');
+      }
   });
 }
 
-angular.module('app', [
-  'ui.router'
-]);
 
-angular.module('app')
-.config(['$stateProvider', '$urlRouterProvider', appConfig]);
+var appConfig = function ($stateProvider, $urlRouterProvider) {
+  
+  $urlRouterProvider.otherwise('/');
 
-var typesResolve = {
-  types: [
-    '$http',
-    ($http) => {
-      return $http.get('http://localhost:5555/api/types')
-      .then(
-        (res) => res.data,
-        (err) => console.error(err)
-      );
-    }
-  ]
-}
+  $stateProvider
 
+  .state('sandbox', {
+    url: '/',
+    templateUrl: 'views/sandbox.html',
+    controller: 'sandboxCtrl as vm'
+  })
+};
 
+angular.module('app', ['ui.router'])
+.config(['$stateProvider', '$urlRouterProvider', appConfig])
+.run(['$rootScope', '$http', '$location', '$window', run]);
