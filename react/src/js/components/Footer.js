@@ -3,7 +3,13 @@ import React from 'react';
 export default class Footer extends React.Component {
   render() {
     return (
-      <footer> FOOTER </footer>
+      <div>
+        <p class="well"> 
+          <a href="http://github.com/sancau">
+            github.com/sancau
+          </a> 
+        </p>
+      </div>
     );
   }
 }
