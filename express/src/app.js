@@ -7,6 +7,8 @@ var express,
     bodyParser,
     morgan,
     
+    Promise, 
+
     app, 
     server, 
     port, 
@@ -36,6 +38,7 @@ express = require('express');
 mongoose = require('mongoose');
 bodyParser = require('body-parser');
 morgan = require('morgan');
+Promise = require('bluebird');
 
 ///////////////////////////////////////////////////////////////////////////////
 
