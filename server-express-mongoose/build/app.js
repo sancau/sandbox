@@ -4,7 +4,7 @@ var _throw = function _throw(e) {
   throw e;
 };
 
-var express, mongoose, bodyParser, morgan, Promise, app, server, port, mongooseConnection, taskSchema, TaskModel, typeSchema, TypeModel, typesGET, typesPOST, typesPUT, typesDELETE, tasksGET, tasksPOST, tasksPUT, tasksDELETE;
+var express, mongoose, bodyParser, morgan, app, server, port, mongooseConnection, taskSchema, TaskModel, typeSchema, TypeModel, typesGET, typesPOST, typesPUT, typesDELETE, tasksGET, tasksPOST, tasksPUT, tasksDELETE;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +14,6 @@ express = require('express');
 mongoose = require('mongoose');
 bodyParser = require('body-parser');
 morgan = require('morgan');
-Promise = require('bluebird');
 
 ///////////////////////////////////////////////////////////////////////////////
 

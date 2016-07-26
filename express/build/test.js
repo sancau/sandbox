@@ -1,51 +1,39 @@
-"use strict";
-
-//////////////////////////////////////////////////////////////////////////////
-
+'use strict';
 
 var Promise = require('bluebird');
 
-function PingPong() {}
+var express = require('express');
+var request = Promise.promisify(require("request"));
+Promise.promisifyAll(request);
 
-PingPong.prototype.ping = Promise.coroutine(regeneratorRuntime.mark(function _callee(val) {
+var app = express();
+
+var api = Promise.coroutine(regeneratorRuntime.mark(function _callee(req, res) {
+  var response;
   return regeneratorRuntime.wrap(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          console.log("Ping?", val);
-          _context.next = 3;
-          return Promise.delay(1200);
+          _context.next = 2;
+          return request('http://www.google.com');
 
-        case 3:
-          this.pong(val + 1);
+        case 2:
+          response = _context.sent;
+          _context.next = 5;
+          return Promise.delay(1000);
 
-        case 4:
-        case "end":
+        case 5:
+          res.sendStatus(response.statusCode);
+
+        case 6:
+        case 'end':
           return _context.stop();
       }
     }
   }, _callee, this);
 }));
 
-PingPong.prototype.pong = Promise.coroutine(regeneratorRuntime.mark(function _callee2(val) {
-  return regeneratorRuntime.wrap(function _callee2$(_context2) {
-    while (1) {
-      switch (_context2.prev = _context2.next) {
-        case 0:
-          console.log("Pong!", val);
-          _context2.next = 3;
-          return Promise.delay(500);
-
-        case 3:
-          this.ping(val + 1);
-
-        case 4:
-        case "end":
-          return _context2.stop();
-      }
-    }
-  }, _callee2, this);
-}));
-
-var a = new PingPong();
-a.ping(0);
+app.get('/', api);
+app.listen(3000, function () {
+  return console.log('Listening on 3000..');
+});
